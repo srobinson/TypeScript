@@ -19,37 +19,98 @@ declare function fn2<T>(
 
 fn2(fn1());
 
-// Shorter repro from issue
+// Full repro from issue
 type Values<T> = T[keyof T];
 
+type MachineContext = Record<string, any>;
+
 interface ParameterizedObject {
-  type: string;
-  params?: unknown;
+    type: string;
+    params?: unknown;
 }
 
-type ActionFunction<TParams, TAction extends ParameterizedObject> = {
-  (params: TParams): void;
-  _out_TAction?: TAction;
+type ActionFunction<
+    TContext extends MachineContext,
+    TParams extends ParameterizedObject["params"] | undefined,
+    TAction extends ParameterizedObject,
+> = {
+    (ctx: TContext, params: TParams): void;
+    _out_TAction?: TAction;
 };
 
-type ToParameterizedObject<TParameterizedMap> = Values<{
-  [K in keyof TParameterizedMap & string]: {
-    type: K;
-    params: TParameterizedMap[K];
-  };
+type ToParameterizedObject<
+    TParameterizedMap extends Record<
+        string,
+        ParameterizedObject["params"] | undefined
+    >,
+> = Values<{
+    [K in keyof TParameterizedMap & string]: {
+        type: K;
+        params: TParameterizedMap[K];
+    };
 }>;
 
-declare function enqueueActions<TParams, TAction extends ParameterizedObject>(
-  collect: (params: TParams) => void,
-): ActionFunction<TParams, TAction>;
+type CollectActions<
+    TContext extends MachineContext,
+    TParams extends ParameterizedObject["params"] | undefined,
+> = (
+    {
+        context,
+        enqueue,
+    }: {
+        context: TContext;
+        enqueue: (action: () => void) => void;
+    },
+    params: TParams,
+) => void;
 
-declare function setup<TActions>(actions: {
-  [K in keyof TActions]: ActionFunction<
-    TActions[K],
-    ToParameterizedObject<TActions>
-  >;
+declare function enqueueActions<
+    TContext extends MachineContext,
+    TParams extends ParameterizedObject["params"] | undefined,
+    TAction extends ParameterizedObject = ParameterizedObject,
+>(
+    collect: CollectActions<TContext, TParams>,
+): ActionFunction<TContext, TParams, TAction>;
+
+declare function setup<
+    TContext extends MachineContext,
+    TActions extends Record<
+        string,
+        ParameterizedObject["params"] | undefined
+    > = {},
+>({
+    types,
+    actions,
+}: {
+    types?: { context?: TContext };
+    actions?: {
+        [K in keyof TActions]: ActionFunction<
+            TContext,
+            TActions[K],
+            ToParameterizedObject<TActions>
+        >;
+    };
 }): void;
 
+// Single action with enqueueActions
 setup({
-  doStuff: enqueueActions((params: number) => {}),
+    actions: {
+        doStuff: enqueueActions((_, params: number) => {}),
+    },
+});
+
+// Two actions, second without explicit context type
+setup({
+    actions: {
+        doStuff: enqueueActions((_, params: number) => {}),
+        doOtherStuff: (_, params: string) => {},
+    },
+});
+
+// Two actions, second with explicit any context type
+setup({
+    actions: {
+        doStuff: enqueueActions((_, params: number) => {}),
+        doOtherStuff: (_: any, params: string) => {},
+    },
 });

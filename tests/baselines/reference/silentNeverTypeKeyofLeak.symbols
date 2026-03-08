@@ -40,104 +40,257 @@ fn2(fn1());
 >fn2 : Symbol(fn2, Decl(silentNeverTypeKeyofLeak.ts, 8, 33))
 >fn1 : Symbol(fn1, Decl(silentNeverTypeKeyofLeak.ts, 6, 30))
 
-// Shorter repro from issue
+// Full repro from issue
 type Values<T> = T[keyof T];
 >Values : Symbol(Values, Decl(silentNeverTypeKeyofLeak.ts, 16, 11))
 >T : Symbol(T, Decl(silentNeverTypeKeyofLeak.ts, 19, 12))
 >T : Symbol(T, Decl(silentNeverTypeKeyofLeak.ts, 19, 12))
 >T : Symbol(T, Decl(silentNeverTypeKeyofLeak.ts, 19, 12))
 
+type MachineContext = Record<string, any>;
+>MachineContext : Symbol(MachineContext, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+>Record : Symbol(Record, Decl(lib.es5.d.ts, --, --))
+
 interface ParameterizedObject {
->ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
 
-  type: string;
->type : Symbol(ParameterizedObject.type, Decl(silentNeverTypeKeyofLeak.ts, 21, 31))
+    type: string;
+>type : Symbol(ParameterizedObject.type, Decl(silentNeverTypeKeyofLeak.ts, 23, 31))
 
-  params?: unknown;
->params : Symbol(ParameterizedObject.params, Decl(silentNeverTypeKeyofLeak.ts, 22, 15))
+    params?: unknown;
+>params : Symbol(ParameterizedObject.params, Decl(silentNeverTypeKeyofLeak.ts, 24, 17))
 }
 
-type ActionFunction<TParams, TAction extends ParameterizedObject> = {
->ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 24, 1))
->TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 26, 20))
->TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 26, 28))
->ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+type ActionFunction<
+>ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 26, 1))
 
-  (params: TParams): void;
->params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 27, 3))
->TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 26, 20))
+    TContext extends MachineContext,
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 28, 20))
+>MachineContext : Symbol(MachineContext, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
 
-  _out_TAction?: TAction;
->_out_TAction : Symbol(_out_TAction, Decl(silentNeverTypeKeyofLeak.ts, 27, 26))
->TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 26, 28))
+    TParams extends ParameterizedObject["params"] | undefined,
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 29, 36))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+    TAction extends ParameterizedObject,
+>TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 30, 62))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+> = {
+    (ctx: TContext, params: TParams): void;
+>ctx : Symbol(ctx, Decl(silentNeverTypeKeyofLeak.ts, 33, 5))
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 28, 20))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 33, 19))
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 29, 36))
+
+    _out_TAction?: TAction;
+>_out_TAction : Symbol(_out_TAction, Decl(silentNeverTypeKeyofLeak.ts, 33, 43))
+>TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 30, 62))
 
 };
 
-type ToParameterizedObject<TParameterizedMap> = Values<{
->ToParameterizedObject : Symbol(ToParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 29, 2))
->TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 31, 27))
+type ToParameterizedObject<
+>ToParameterizedObject : Symbol(ToParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 35, 2))
+
+    TParameterizedMap extends Record<
+>TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 37, 27))
+>Record : Symbol(Record, Decl(lib.es5.d.ts, --, --))
+
+        string,
+        ParameterizedObject["params"] | undefined
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+    >,
+> = Values<{
 >Values : Symbol(Values, Decl(silentNeverTypeKeyofLeak.ts, 16, 11))
 
-  [K in keyof TParameterizedMap & string]: {
->K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 32, 3))
->TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 31, 27))
+    [K in keyof TParameterizedMap & string]: {
+>K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 43, 5))
+>TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 37, 27))
 
-    type: K;
->type : Symbol(type, Decl(silentNeverTypeKeyofLeak.ts, 32, 44))
->K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 32, 3))
+        type: K;
+>type : Symbol(type, Decl(silentNeverTypeKeyofLeak.ts, 43, 46))
+>K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 43, 5))
 
-    params: TParameterizedMap[K];
->params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 33, 12))
->TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 31, 27))
->K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 32, 3))
+        params: TParameterizedMap[K];
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 44, 16))
+>TParameterizedMap : Symbol(TParameterizedMap, Decl(silentNeverTypeKeyofLeak.ts, 37, 27))
+>K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 43, 5))
 
-  };
+    };
 }>;
 
-declare function enqueueActions<TParams, TAction extends ParameterizedObject>(
->enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 36, 3))
->TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 38, 32))
->TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 38, 40))
->ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+type CollectActions<
+>CollectActions : Symbol(CollectActions, Decl(silentNeverTypeKeyofLeak.ts, 47, 3))
 
-  collect: (params: TParams) => void,
->collect : Symbol(collect, Decl(silentNeverTypeKeyofLeak.ts, 38, 78))
->params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 39, 12))
->TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 38, 32))
+    TContext extends MachineContext,
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 49, 20))
+>MachineContext : Symbol(MachineContext, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
 
-): ActionFunction<TParams, TAction>;
->ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 24, 1))
->TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 38, 32))
->TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 38, 40))
+    TParams extends ParameterizedObject["params"] | undefined,
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 50, 36))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
 
-declare function setup<TActions>(actions: {
->setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 40, 36))
->TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 42, 23))
->actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 42, 33))
+> = (
+    {
+        context,
+>context : Symbol(context, Decl(silentNeverTypeKeyofLeak.ts, 53, 5))
 
-  [K in keyof TActions]: ActionFunction<
->K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 43, 3))
->TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 42, 23))
->ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 24, 1))
+        enqueue,
+>enqueue : Symbol(enqueue, Decl(silentNeverTypeKeyofLeak.ts, 54, 16))
 
-    TActions[K],
->TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 42, 23))
->K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 43, 3))
+    }: {
+        context: TContext;
+>context : Symbol(context, Decl(silentNeverTypeKeyofLeak.ts, 56, 8))
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 49, 20))
 
-    ToParameterizedObject<TActions>
->ToParameterizedObject : Symbol(ToParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 29, 2))
->TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 42, 23))
+        enqueue: (action: () => void) => void;
+>enqueue : Symbol(enqueue, Decl(silentNeverTypeKeyofLeak.ts, 57, 26))
+>action : Symbol(action, Decl(silentNeverTypeKeyofLeak.ts, 58, 18))
 
-  >;
+    },
+    params: TParams,
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 59, 6))
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 50, 36))
+
+) => void;
+
+declare function enqueueActions<
+>enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 61, 10))
+
+    TContext extends MachineContext,
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 63, 32))
+>MachineContext : Symbol(MachineContext, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+
+    TParams extends ParameterizedObject["params"] | undefined,
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 64, 36))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+    TAction extends ParameterizedObject = ParameterizedObject,
+>TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 65, 62))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+>(
+    collect: CollectActions<TContext, TParams>,
+>collect : Symbol(collect, Decl(silentNeverTypeKeyofLeak.ts, 67, 2))
+>CollectActions : Symbol(CollectActions, Decl(silentNeverTypeKeyofLeak.ts, 47, 3))
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 63, 32))
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 64, 36))
+
+): ActionFunction<TContext, TParams, TAction>;
+>ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 26, 1))
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 63, 32))
+>TParams : Symbol(TParams, Decl(silentNeverTypeKeyofLeak.ts, 64, 36))
+>TAction : Symbol(TAction, Decl(silentNeverTypeKeyofLeak.ts, 65, 62))
+
+declare function setup<
+>setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 69, 46))
+
+    TContext extends MachineContext,
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 71, 23))
+>MachineContext : Symbol(MachineContext, Decl(silentNeverTypeKeyofLeak.ts, 19, 28))
+
+    TActions extends Record<
+>TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 72, 36))
+>Record : Symbol(Record, Decl(lib.es5.d.ts, --, --))
+
+        string,
+        ParameterizedObject["params"] | undefined
+>ParameterizedObject : Symbol(ParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 21, 42))
+
+    > = {},
+>({
+    types,
+>types : Symbol(types, Decl(silentNeverTypeKeyofLeak.ts, 77, 3))
+
+    actions,
+>actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 78, 10))
+
+}: {
+    types?: { context?: TContext };
+>types : Symbol(types, Decl(silentNeverTypeKeyofLeak.ts, 80, 4))
+>context : Symbol(context, Decl(silentNeverTypeKeyofLeak.ts, 81, 13))
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 71, 23))
+
+    actions?: {
+>actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 81, 35))
+
+        [K in keyof TActions]: ActionFunction<
+>K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 83, 9))
+>TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 72, 36))
+>ActionFunction : Symbol(ActionFunction, Decl(silentNeverTypeKeyofLeak.ts, 26, 1))
+
+            TContext,
+>TContext : Symbol(TContext, Decl(silentNeverTypeKeyofLeak.ts, 71, 23))
+
+            TActions[K],
+>TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 72, 36))
+>K : Symbol(K, Decl(silentNeverTypeKeyofLeak.ts, 83, 9))
+
+            ToParameterizedObject<TActions>
+>ToParameterizedObject : Symbol(ToParameterizedObject, Decl(silentNeverTypeKeyofLeak.ts, 35, 2))
+>TActions : Symbol(TActions, Decl(silentNeverTypeKeyofLeak.ts, 72, 36))
+
+        >;
+    };
 }): void;
 
+// Single action with enqueueActions
 setup({
->setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 40, 36))
+>setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 69, 46))
 
-  doStuff: enqueueActions((params: number) => {}),
->doStuff : Symbol(doStuff, Decl(silentNeverTypeKeyofLeak.ts, 49, 7))
->enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 36, 3))
->params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 50, 27))
+    actions: {
+>actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 92, 7))
 
+        doStuff: enqueueActions((_, params: number) => {}),
+>doStuff : Symbol(doStuff, Decl(silentNeverTypeKeyofLeak.ts, 93, 14))
+>enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 61, 10))
+>_ : Symbol(_, Decl(silentNeverTypeKeyofLeak.ts, 94, 33))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 94, 35))
+
+    },
+});
+
+// Two actions, second without explicit context type
+setup({
+>setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 69, 46))
+
+    actions: {
+>actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 99, 7))
+
+        doStuff: enqueueActions((_, params: number) => {}),
+>doStuff : Symbol(doStuff, Decl(silentNeverTypeKeyofLeak.ts, 100, 14))
+>enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 61, 10))
+>_ : Symbol(_, Decl(silentNeverTypeKeyofLeak.ts, 101, 33))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 101, 35))
+
+        doOtherStuff: (_, params: string) => {},
+>doOtherStuff : Symbol(doOtherStuff, Decl(silentNeverTypeKeyofLeak.ts, 101, 59))
+>_ : Symbol(_, Decl(silentNeverTypeKeyofLeak.ts, 102, 23))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 102, 25))
+
+    },
+});
+
+// Two actions, second with explicit any context type
+setup({
+>setup : Symbol(setup, Decl(silentNeverTypeKeyofLeak.ts, 69, 46))
+
+    actions: {
+>actions : Symbol(actions, Decl(silentNeverTypeKeyofLeak.ts, 107, 7))
+
+        doStuff: enqueueActions((_, params: number) => {}),
+>doStuff : Symbol(doStuff, Decl(silentNeverTypeKeyofLeak.ts, 108, 14))
+>enqueueActions : Symbol(enqueueActions, Decl(silentNeverTypeKeyofLeak.ts, 61, 10))
+>_ : Symbol(_, Decl(silentNeverTypeKeyofLeak.ts, 109, 33))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 109, 35))
+
+        doOtherStuff: (_: any, params: string) => {},
+>doOtherStuff : Symbol(doOtherStuff, Decl(silentNeverTypeKeyofLeak.ts, 109, 59))
+>_ : Symbol(_, Decl(silentNeverTypeKeyofLeak.ts, 110, 23))
+>params : Symbol(params, Decl(silentNeverTypeKeyofLeak.ts, 110, 30))
+
+    },
 });
 
